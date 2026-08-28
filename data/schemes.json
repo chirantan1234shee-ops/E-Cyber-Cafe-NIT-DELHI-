@@ -1,0 +1,16 @@
+﻿[
+  {
+    "id": "SCH001",
+    "name": "PM-Vidyalaxmi Education Loan",
+    "description": "Financial assistance for higher education in recognized Indian institutions.",
+    "max_income": 250000,
+    "occupation": "student"
+  },
+  {
+    "id": "SCH002",
+    "name": "PM-Kisan Samman Nidhi",
+    "description": "Direct income support of ₹6,000 per year for eligible landholding farmer families.",
+    "max_income": 200000,
+    "occupation": "farmer"
+  }
+]

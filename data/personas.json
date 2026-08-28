@@ -1,0 +1,16 @@
+﻿{
+  "Engineering Student": {
+    "name": "Aarav Sharma",
+    "age": 19,
+    "income": 180000,
+    "occupation": "student",
+    "state": "Uttar Pradesh"
+  },
+  "Rural Farmer": {
+    "name": "Ramesh Kumar",
+    "age": 45,
+    "income": 120000,
+    "occupation": "farmer",
+    "state": "Uttar Pradesh"
+  }
+}
