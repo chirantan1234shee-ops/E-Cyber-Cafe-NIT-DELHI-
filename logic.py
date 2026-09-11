@@ -1,13 +1,14 @@
 ﻿import os
 from openai import OpenAI
 
-# 🔑 Paste your OpenRouter API Key here
-OPENROUTER_API_KEY = "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"
+# Configure this in Streamlit secrets or the OPENROUTER_API_KEY environment variable.
+# Never commit API keys to the repository.
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 
 def get_real_ai_response(user_query: str, scheme: dict, profile: dict, ready_docs: list, missing_docs: list, language: str) -> str:
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key=os.environ.get("OPENROUTER_API_KEY") or OPENROUTER_API_KEY
+        api_key=OPENROUTER_API_KEY
     )
     
     lang_instruction = {
