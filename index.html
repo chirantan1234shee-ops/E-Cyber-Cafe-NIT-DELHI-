@@ -1,1 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YojnaMitra — Digital Cyber Cafe & Welfare Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{
+  --cream:#FBF5E9;
+  --cream-2:#F5ECDA;
+  --card:#FFFFFF;
+  --ink:#241708;
+  --body:#5B4739;
+  --muted:#9C8A78;
+  --border:#E9DBC2;
+  --saffron:#F4863A;
+  --saffron-deep:#C9601B;
+  --green:#0E6B4F;
+  --green-deep:#0A4F3B;
+  --maroon:#7A2E1D;
+  --danger:#C24831;
+  --danger-bg:#FBEAE3;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:9px;
+  --shadow:0 1px 2px rgba(42,27,15,.04), 0 8px 24px -12px rgba(42,27,15,.16);
+  --shadow-lg:0 4px 10px rgba(42,27,15,.06), 0 24px 48px -16px rgba(42,27,15,.24);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --nav-bg:rgba(251,245,233,.86);
+  --progress-track:rgba(122,46,29,.08);
+}
+html[data-theme="dark"]{
+  --cream:#0B0F19;
+  --cream-2:#111827;
+  --card:#1F2937;
+  --ink:#F3F4F6;
+  --body:#9CA3AF;
+  --muted:#6B7280;
+  --border:#2A3444;
+  --saffron:#10B981;
+  --saffron-deep:#059669;
+  --green:#06B6D4;
+  --green-deep:#0891B2;
+  --maroon:#06B6D4;
+  --danger:#F87171;
+  --danger-bg:#3A1418;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 4px 14px rgba(0,0,0,.5), 0 30px 60px -18px rgba(0,0,0,.8);
+  --nav-bg:rgba(11,15,25,.82);
+  --progress-track:rgba(255,255,255,.08);
+  --glow-green:0 0 0 1px rgba(16,185,129,.4), 0 0 24px -4px rgba(16,185,129,.55);
+  --glow-cyan:0 0 0 1px rgba(6,182,212,.4), 0 0 24px -4px rgba(6,182,212,.55);
+}
+html[data-theme="dark"] body{ font-weight:450; letter-spacing:-.005em; }
+html[data-theme="dark"] h1, html[data-theme="dark"] h2, html[data-theme="dark"] h3, html[data-theme="dark"] .display{
+  letter-spacing:-.02em; font-weight:650;
+}
+html[data-theme="dark"] .card, html[data-theme="dark"] .form-card, html[data-theme="dark"] .hero-card{
+  background:var(--card); border:1px solid var(--border); transition:transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
+}
+html[data-theme="dark"] .card:hover{ transform:translateY(-3px); border-color:rgba(16,185,129,.45); box-shadow:var(--glow-green); }
+html[data-theme="dark"] .btn-accent, html[data-theme="dark"] .btn-primary{
+  background:linear-gradient(135deg,var(--saffron),var(--green)); color:#04120C; border:none; font-weight:700;
+  box-shadow:0 0 0 1px rgba(16,185,129,.5), 0 10px 24px -10px rgba(16,185,129,.6);
+  transition:transform .18s var(--ease-spring), box-shadow .22s var(--ease), filter .18s var(--ease);
+}
+html[data-theme="dark"] .btn-accent:hover, html[data-theme="dark"] .btn-primary:hover{
+  transform:translateY(-2px) scale(1.015); filter:brightness(1.08); box-shadow:0 0 0 1px rgba(16,185,129,.7), 0 14px 30px -10px rgba(16,185,129,.8);
+}
+html[data-theme="dark"] .btn-outline{ border-color:var(--border); color:var(--ink); transition:all .2s var(--ease); }
+html[data-theme="dark"] .btn-outline:hover{ border-color:var(--green); color:var(--green); box-shadow:var(--glow-cyan); transform:translateY(-1px); }
+html[data-theme="dark"] .pill.ok{ background:rgba(6,182,212,.12); color:var(--green); }
+html[data-theme="dark"] .pill.warn{ background:rgba(248,113,113,.12); color:#FCA5A5; }
+html[data-theme="dark"] a:hover{ color:var(--saffron); }
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Manrope',sans-serif;
+  font-size:15.5px;
+  letter-spacing:-.001em;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .25s var(--ease), color .25s var(--ease);
+}
+h1,h2,h3,.display{font-family:'Fraunces',serif;color:var(--ink);margin:0;letter-spacing:-.01em;}
+p{margin:0;line-height:1.65;color:var(--body);}
+a{color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+img{max-width:100%;display:block;}
+::selection{background:color-mix(in srgb, var(--saffron) 35%, transparent); color:var(--ink);}
 
+.tricolor-bar{height:4px;width:100%;background:linear-gradient(90deg,var(--saffron) 0 33.3%, #F4EEDD 33.3% 66.6%, var(--green) 66.6% 100%);}
+.scroll-progress{position:fixed; top:0; left:0; width:100%; height:3px; z-index:60; background:var(--progress-track); pointer-events:none;}
+.scroll-progress-bar{height:100%; width:0%; background:linear-gradient(90deg,var(--saffron),var(--maroon),var(--green)); transform-origin:left; transition:width .12s linear; box-shadow:0 0 8px rgba(244,134,58,.5);}
+.jali-bg{
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background-color:var(--cream);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(122,46,29,0.07) 1px, transparent 0);
+  background-size:26px 26px;
+}
+
+/* Custom interactive state and chat element styles */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.8s ease-in-out infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body data-theme="light">
+  <div class="scroll-progress"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+  <div class="tricolor-bar"></div>
+  <div class="jali-bg"></div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md border-b border-[var(--border)] transition-colors duration-200" style="background:var(--nav-bg);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--saffron)] to-[var(--green)] flex items-center justify-center text-white font-bold text-lg shadow-md">
+          YM
+        </div>
+        <div>
+          <span class="font-serif text-xl font-bold tracking-tight">YojnaMitra</span>
+          <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded-full bg-[var(--cream-2)] text-[var(--body)] font-medium border border-[var(--border)]">Digital Cyber Cafe</span>
+        </div>
+      </div>
+      
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-[var(--body)]">
+        <a href="#services" class="hover:text-[var(--saffron)] transition-colors">Services</a>
+        <a href="#eligibility" class="hover:text-[var(--saffron)] transition-colors">Eligibility Checker</a>
+        <a href="#mitra-ai" class="hover:text-[var(--saffron)] transition-colors">Mitra AI Assistant</a>
+        <a href="#tracker" class="hover:text-[var(--saffron)] transition-colors">Application Tracker</a>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button id="themeToggle" class="p-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--body)] hover:text-[var(--saffron)] transition-colors" title="Toggle Theme">
+          <svg id="themeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </button>
+        <a href="#mitra-ai" class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-[var(--saffron)] to-[var(--green)] shadow-md hover:opacity-95 transition-all">
+          Ask Mitra AI
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[var(--cream-2)] border border-[var(--border)] text-xs font-semibold text-[var(--saffron-deep)] mb-6">
+      <span class="w-2 h-2 rounded-full bg-[var(--saffron)] animate-pulse"></span>
+      <span>AI-Powered Citizen Services & Welfare Platform</span>
+    </div>
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 max-w-4xl mx-auto leading-tight">
+      Your Gateway to <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--saffron)] to-[var(--green)]">Government Schemes</span> & Digital Services
+    </h1>
+    <p class="text-lg sm:text-xl text-[var(--body)] max-w-2xl mx-auto mb-10">
+      Skip the long lines at physical cyber cafes. Check your scheme eligibility instantly, file applications securely, and consult our AI assistant in real time.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="#eligibility" class="w-full sm:w-auto px-8 py-3.5 rounded-xl text-base font-bold text-white bg-gradient-to-r from-[var(--saffron)] to-[var(--green)] shadow-lg hover:translate-y-[-2px] transition-transform">
+        Check Eligibility Now
+      </a>
+      <a href="#mitra-ai" class="w-full sm:w-auto px-8 py-3.5 rounded-xl text-base font-bold border border-[var(--border)] bg-[var(--card)] hover:border-[var(--saffron)] transition-colors">
+        Chat with Mitra AI
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Functional Sections Container (Integrated Backend Bridge) -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 pb-24">
+
+    <!-- Services Section -->
+    <section id="services" class="pt-8">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">Digital Cyber Cafe Services</h2>
+        <p class="text-[var(--body)]">End-to-end digital assistance for government documentation, welfare schemes, and applications.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 rounded-xl bg-[var(--cream-2)] text-[var(--saffron-deep)] flex items-center justify-center text-xl font-bold mb-4">📜</div>
+          <h3 class="text-xl font-bold mb-2">Welfare Schemes</h3>
+          <p class="text-sm text-[var(--body)]">Central and State scheme discovery, automated eligibility checks, and guided document preparation.</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 rounded-xl bg-[var(--cream-2)] text-[var(--green)] flex items-center justify-center text-xl font-bold mb-4">🆔</div>
+          <h3 class="text-xl font-bold mb-2">Document & ID Services</h3>
+          <p class="text-sm text-[var(--body)]">Assistance with Aadhaar linking, PAN card updates, Voter ID registration, and income/caste certificates.</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 rounded-xl bg-[var(--cream-2)] text-[var(--maroon)] flex items-center justify-center text-xl font-bold mb-4">🤖</div>
+          <h3 class="text-xl font-bold mb-2">AI-Driven Guidance</h3>
+          <p class="text-sm text-[var(--body)]">Multilingual conversational assistance to help you navigate complex bureaucracy in simple terms.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eligibility Checker Module -->
+    <section id="eligibility" class="pt-8">
+      <div class="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl bg-[var(--card)] border border-[var(--border)] shadow-lg">
+        <div class="text-center mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[var(--saffron-deep)] bg-[var(--cream-2)] px-3 py-1 rounded-full">Interactive Tool</span>
+          <h2 class="text-3xl font-bold mt-3 mb-2">Smart Eligibility Checker</h2>
+          <p class="text-sm text-[var(--body)]">Enter your details to instantly discover matching central and state welfare schemes.</p>
+        </div>
+
+        <form id="eligibilityForm" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-semibold mb-2">Age</label>
+              <input type="number" id="ageInput" required placeholder="e.g. 21" min="0" max="120" class="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)]">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Annual Family Income (₹)</label>
+              <input type="number" id="incomeInput" required placeholder="e.g. 150000" min="0" class="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)]">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">State of Residence</label>
+              <select id="stateInput" required class="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)]">
+                <option value="">Select State</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Other">Other States</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-2">Category</label>
+              <select id="categoryInput" required class="w-full px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)]">
+                <option value="">Select Category</option>
+                <option value="General">General</option>
+                <option value="OBC">OBC</option>
+                <option value="SC">SC</option>
+                <option value="ST">ST</option>
+                <option value="EWS">EWS</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-4 rounded-xl font-bold text-white bg-gradient-to-r from-[var(--saffron)] to-[var(--green)] shadow-md hover:opacity-95 transition-opacity flex items-center justify-center space-x-2">
+            <span>Check Matching Schemes</span>
+          </button>
+        </form>
+
+        <div id="eligibilityResults" class="mt-8 hidden">
+          <h3 class="text-xl font-bold mb-4 border-b pb-2">Eligible Schemes Found:</h3>
+          <div id="schemesList" class="space-y-4"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mitra AI Assistant Module -->
+    <section id="mitra-ai" class="pt-8">
+      <div class="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl bg-[var(--card)] border border-[var(--border)] shadow-lg flex flex-col h-[600px]">
+        <div class="flex items-center justify-between pb-6 border-b border-[var(--border)]">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--saffron)] to-[var(--green)] flex items-center justify-center text-white font-bold text-lg">
+              🤖
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">Mitra AI Assistant</h2>
+              <p class="text-xs text-[var(--muted)]">Ask anything about government forms, documents, or schemes</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-600">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Online
+          </span>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chatMessages" class="flex-1 overflow-y-auto py-6 space-y-4 pr-2">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-[var(--cream-2)] flex items-center justify-center font-bold text-sm shrink-0">🤖</div>
+            <div class="p-4 rounded-2xl bg-[var(--cream)] text-sm max-w-[80%] border border-[var(--border)]">
+              Namaste! I am Mitra AI. How can I help you navigate government schemes or document verification today?
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form id="chatForm" class="pt-4 border-t border-[var(--border)] flex gap-3">
+          <input type="text" id="chatInput" placeholder="Type your question here (e.g. How do I apply for scholarship?)..." class="flex-1 px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)] text-sm">
+          <button type="submit" id="chatSubmitBtn" class="px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-[var(--saffron)] to-[var(--green)] shadow-md hover:opacity-95 transition-opacity">
+            Send
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Application Status Tracker Module -->
+    <section id="tracker" class="pt-8">
+      <div class="max-w-3xl mx-auto p-6 sm:p-10 rounded-3xl bg-[var(--card)] border border-[var(--border)] shadow-lg">
+        <div class="text-center mb-8">
+          <span class="text-xs font-bold uppercase tracking-wider text-[var(--green)] bg-[var(--cream-2)] px-3 py-1 rounded-full">Real-Time Tracking</span>
+          <h2 class="text-3xl font-bold mt-3 mb-2">Track Application Status</h2>
+          <p class="text-sm text-[var(--body)]">Enter your reference or application ID to check current processing status.</p>
+        </div>
+
+        <form id="trackerForm" class="flex gap-4 mb-6">
+          <input type="text" id="trackerInput" required placeholder="Enter Application ID (e.g. YM-2026-9482)" class="flex-1 px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--cream)] focus:outline-none focus:border-[var(--saffron)] text-[var(--ink)] text-sm">
+          <button type="submit" class="px-6 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-[var(--saffron)] to-[var(--green)] shadow-md hover:opacity-95 transition-opacity">
+            Track
+          </button>
+        </form>
+
+        <div id="trackerResult" class="hidden p-6 rounded-2xl bg-[var(--cream)] border border-[var(--border)]">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span id="resAppId" class="text-xs font-mono font-bold text-[var(--muted)]"></span>
+              <h4 id="resSchemeName" class="text-lg font-bold"></h4>
+            </div>
+            <span id="resStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold"></span>
+          </div>
+          <div class="text-sm text-[var(--body)] space-y-1">
+            <p><strong>Applicant:</strong> <span id="resApplicant"></span></p>
+            <p><strong>Last Updated:</strong> <span id="resDate"></span></p>
+            <p><strong>Current Remarks:</strong> <span id="resRemarks"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[var(--border)] bg-[var(--card)] py-12 px-4 sm:px-6 lg:px-8 text-center text-sm text-[var(--body)]">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-2">
+        <span class="font-serif font-bold text-lg">YojnaMitra</span>
+        <span>— Digital Cyber Cafe & Welfare Portal</span>
+      </div>
+      <p>© 2026 YojnaMitra Initiative. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Frontend-Backend Integration Script -->
+  <script>
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlElement.setAttribute('data-theme', newTheme);
+    });
+
+    // Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scrollBar').style.width = scrolled + '%';
+    });
+
+    // Mock Backend Database for Schemes & Applications
+    const backendDatabase = {
+      schemes: [
+        { name: "Pradhan Mantri Awas Yojana (PMAY)", maxIncome: 300000, minAge: 18, desc: "Financial assistance for pucca house construction." },
+        { name: "National Scholarship Portal (NSP) - Higher Education", maxIncome: 250000, minAge: 17, desc: "Tuition and maintenance allowance for undergraduate students." },
+        { name: "Ayushman Bharat PM-JAY", maxIncome: 500000, minAge: 0, desc: "Health cover of up to 5 Lakhs per family per year." },
+        { name: "State Skill Development & Rozgar Yojana", maxIncome: 200000, minAge: 18, desc: "Free professional vocational training and monthly stipend." }
+      ],
+      applications: {
+        "YM-2026-9482": { scheme: "National Scholarship Portal (NSP)", status: "Approved", applicant: "Chirantan Shee", date: "2026-09-08", remarks: "Document verification completed successfully by nodal officer." },
+        "YM-2026-1102": { scheme: "Ayushman Bharat PM-JAY", status: "Under Review", applicant: "Chinmoy Shee", date: "2026-09-10", remarks: "Pending verification of family income certificate." }
+      }
+    };
+
+    // 1. Eligibility Checker Logic
+    document.getElementById('eligibilityForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const age = parseInt(document.getElementById('ageInput').value);
+      const income = parseFloat(document.getElementById('incomeInput').value);
+      
+      const resultsDiv = document.getElementById('eligibilityResults');
+      const listDiv = document.getElementById('schemesList');
+      listDiv.innerHTML = '';
+
+      const matched = backendDatabase.schemes.filter(s => age >= s.minAge && income <= s.maxIncome);
+
+      if (matched.length > 0) {
+        matched.forEach(scheme => {
+          const card = document.createElement('div');
+          card.className = "p-4 rounded-xl bg-[var(--cream)] border border-[var(--border)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4";
+          card.innerHTML = `
+            <div>
+              <h4 class="font-bold text-[var(--ink)]">${scheme.name}</h4>
+              <p class="text-xs text-[var(--body)] mt-1">${scheme.desc}</p>
+            </div>
+            <button onclick="alert('Redirecting to application assistant for ${scheme.name}')" class="px-4 py-2 rounded-lg text-xs font-bold text-white bg-[var(--green)] hover:opacity-90 shrink-0">
+              Apply Now
+            </button>
+          `;
+          listDiv.appendChild(card);
+        });
+      } else {
+        listDiv.innerHTML = `<p class="text-sm text-[var(--body)] italic">No specific welfare schemes matched your precise income/age criteria at this time. Try consulting Mitra AI for customized guidance.</p>`;
+      }
+
+      resultsDiv.classList.remove('hidden');
+    });
+
+    // 2. Mitra AI Chat Assistant Logic
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = chatInput.value.trim();
+      if (!query) return;
+
+      // Append User Message
+      appendMessage(query, 'user');
+      chatInput.value = '';
+
+      // Show typing indicator
+      const typingId = appendTypingIndicator();
+
+      // Simulate intelligent backend AI response
+      setTimeout(() => {
+        removeTypingIndicator(typingId);
+        let aiResponse = generateAIResponse(query);
+        appendMessage(aiResponse, 'ai');
+      }, 1000);
+    });
+
+    function appendMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = `flex items-start space-x-3 ${sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`;
+      
+      const avatar = document.createElement('div');
+      avatar.className = `w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${sender === 'user' ? 'bg-[var(--saffron)] text-white' : 'bg-[var(--cream-2)]'}`;
+      avatar.textContent = sender === 'user' ? 'U' : '🤖';
+
+      const bubble = document.createElement('div');
+      bubble.className = `p-4 rounded-2xl text-sm max-w-[80%] border ${sender === 'user' ? 'bg-[var(--saffron)] text-white border-transparent' : 'bg-[var(--cream)] text-[var(--ink)] border-[var(--border)]'}`;
+      bubble.textContent = text;
+
+      div.appendChild(avatar);
+      div.appendChild(bubble);
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendTypingIndicator() {
+      const id = 'typing-' + Date.now();
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = 'flex items-start space-x-3';
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-lg bg-[var(--cream-2)] flex items-center justify-center font-bold text-sm shrink-0">🤖</div>
+        <div class="p-4 rounded-2xl bg-[var(--cream)] text-sm border border-[var(--border)] flex items-center space-x-2">
+          <div class="spinner" style="width:14px; height:14px; border-width:2px; border-top-color:var(--saffron);"></div>
+          <span class="text-xs text-[var(--muted)]">Mitra AI is thinking...</span>
+        </div>
+      `;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return id;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function generateAIResponse(query) {
+      const q = query.toLowerCase();
+      if (q.includes('scholarship') || q.includes('nsp') || q.includes('college')) {
+        return "For higher education scholarships (like NSP), you will need your Aadhaar card linked to your bank account, your current semester enrollment or fee receipt, and an income certificate issued by the competent authority.";
+      } else if (q.includes('income') || q.includes('certificate') || q.includes('caste')) {
+        return "Income and caste certificates are typically processed through your state's e-District portal (e.g., e-District UP or Delhi). You'll need a self-declaration form, ration card or electricity bill, and passport-size photographs.";
+      } else if (q.includes('status') || q.includes('track')) {
+        return "You can easily track your application status using our Application Tracker module further down this page by entering your unique reference ID (e.g., YM-2026-9482).";
+      } else {
+        return "I understand your query regarding '" + query + "'. To proceed securely, please make sure your documents are scanned clearly in PDF format under 2MB. Would you like me to check your scheme eligibility based on your age and income?";
+      }
+    }
+
+    // 3. Application Tracker Logic
+    document.getElementById('trackerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const appId = document.getElementById('trackerInput').value.trim();
+      const resultDiv = document.getElementById('trackerResult');
+      
+      const record = backendDatabase.applications[appId];
+      if (record) {
+        document.getElementById('resAppId').textContent = appId;
+        document.getElementById('resSchemeName').textContent = record.scheme;
+        document.getElementById('resApplicant').textContent = record.applicant;
+        document.getElementById('resDate').textContent = record.date;
+        document.getElementById('resRemarks').textContent = record.remarks;
+        
+        const badge = document.getElementById('resStatusBadge');
+        badge.textContent = record.status;
+        if (record.status === 'Approved') {
+          badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600";
+        } else {
+          badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600";
+        }
+
+        resultDiv.classList.remove('hidden');
+      } else {
+        alert("Application ID not found in the live database. Please check your reference number (try testing with: YM-2026-9482).");
+        resultDiv.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
