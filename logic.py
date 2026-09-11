@@ -1,61 +1,61 @@
-﻿import os
-from openai import OpenAI
+﻿# logic.py
+from sqlalchemy.orm import Session
+from database import Scheme
+from vector_search import semantic_scheme_match
 
-# 🔑 Paste your OpenRouter API Key here
-OPENROUTER_API_KEY = "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"
+def evaluate_eligibility(scheme: Scheme, user_profile: dict) -> dict:
+    rules = scheme.rules or {}
+    disqualifications = []
 
-def get_real_ai_response(user_query: str, scheme: dict, profile: dict, ready_docs: list, missing_docs: list, language: str) -> str:
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.environ.get("OPENROUTER_API_KEY") or OPENROUTER_API_KEY
-    )
+    age = user_profile.get("age", 0)
+    income = user_profile.get("annual_income", 0.0)
+    state = user_profile.get("state", "")
+    category = user_profile.get("category", "")
+
+    if "min_age" in rules and age < rules["min_age"]:
+        disqualifications.append(f"Age {age} is below minimum required age of {rules['min_age']}.")
+    if "max_age" in rules and age > rules["max_age"]:
+        disqualifications.append(f"Age {age} exceeds maximum allowed age of {rules['max_age']}.")
+    if "max_income" in rules and income > rules["max_income"]:
+        disqualifications.append(f"Annual income ₹{income} exceeds upper limit of ₹{rules['max_income']}.")
+
+    allowed_states = rules.get("allowed_states", ["All"])
+    if "All" not in allowed_states and state not in allowed_states:
+        disqualifications.append(f"State domicile '{state}' is not covered under this scheme.")
+
+    eligible_cats = rules.get("eligible_categories", ["All"])
+    if "All" not in eligible_cats and category not in eligible_cats:
+        disqualifications.append(f"Category '{category}' does not match eligible groups.")
+
+    is_eligible = len(disqualifications) == 0
+    return {
+        "scheme_id": scheme.id,
+        "scheme_name": scheme.name,
+        "category": scheme.category,
+        "is_eligible": is_eligible,
+        "disqualification_reasons": disqualifications
+    }
+
+def match_all_schemes(db: Session, user_profile: dict) -> list[dict]:
+    schemes = db.query(Scheme).filter(Scheme.is_active == True).all()
+    return [evaluate_eligibility(scheme, user_profile) for scheme in schemes]
+
+def hybrid_rag_scheme_search(db: Session, user_query: str, user_profile: dict, top_k=3) -> list[dict]:
+    """
+    Performs a hybrid search: filters schemes by deterministic rule eligibility first,
+    then ranks the eligible ones using semantic vector similarity.
+    """
+    schemes = db.query(Scheme).filter(Scheme.is_active == True).all()
     
-    lang_instruction = {
-        "English": "Respond strictly in professional English.",
-        "Hindi": "कृपया उत्तर पूरी तरह से हिंदी भाषा में दें।",
-        "Hinglish": "Respond in casual Hinglish mix of Hindi and English like a helpful local advisor."
-    }.get(language, "Respond in English.")
-
-    system_prompt = f"""
-You are 'YojnaMitra' (योजना मित्र), an expert Agentic AI Assistant specialized in Indian Government Schemes.
-Language Preference: {lang_instruction}
-
-YOUR AGENTIC RULES:
-1. Evaluate user eligibility based on profile income (₹{profile.get('income')}) versus scheme ceiling (₹{scheme.get('max_income')}).
-2. Address missing documents or DigiLocker status.
-3. Be clear, structured, and helpful.
-
-CONTEXT:
-- Scheme: {scheme.get('title')} ({scheme.get('ministry')})
-- Benefits: {scheme.get('summary')}
-- Applicant Name: {profile.get('full_name')}
-- Occupation: {profile.get('occupation')}
-- State: {profile.get('state')}
-- DigiLocker Verified: {'Yes' if profile.get('digilocker_verified') else 'No'}
-- Ready Documents: {ready_docs}
-- Missing Documents: {missing_docs}
-"""
-
-    candidate_models = [
-        "meta-llama/llama-3.3-70b-instruct",
-        "deepseek/deepseek-r1:free",
-        "openrouter/auto"
-    ]
-
-    last_error = ""
-    for model_id in candidate_models:
-        try:
-            completion = client.chat.completions.create(
-                model=model_id,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_query}
-                ],
-                temperature=0.3
-            )
-            return completion.choices[0].message.content
-        except Exception as e:
-            last_error = str(e)
-            continue
-
-    return f"⚠️ **OpenRouter AI Error:** {last_error}"
+    # Step 1: Evaluate strict rule constraints
+    evaluated = [evaluate_eligibility(s, user_profile) for s in schemes]
+    eligible_scheme_ids = {res["scheme_id"] for res in evaluated if res["is_eligible"]}
+    
+    eligible_schemes = [s for s in schemes if s.id in eligible_scheme_ids]
+    
+    if not eligible_schemes:
+        return []
+        
+    # Step 2: Apply semantic vector search across the filtered eligible pool
+    semantic_results = semantic_scheme_match(user_query, eligible_schemes, top_k=top_k)
+    return semantic_results
