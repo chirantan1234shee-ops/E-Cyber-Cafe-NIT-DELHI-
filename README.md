@@ -45,8 +45,9 @@ cyber_cafe/
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/chirantan1234shee-ops/cyber_cafe.git
-cd cyber_cafe
+git clone https://github.com/chirantan1234shee-ops/E-Cyber-Cafe-NIT-DELHI-.git
+git checkout codex/hackathon-mvp-hardening
+cd E-Cyber-Cafe-NIT-DELHI-
 
 ```
 
@@ -80,3 +81,20 @@ streamlit run app.py
 
 * **Live Application:** [yojnamitra-cybercafe.streamlit.app](https://www.google.com/search?q=https://yojnamitra-cybercafe.streamlit.app)[cite: 3]
 * **GitHub Repository:** [chirantan1234shee-ops/cyber_cafe](https://www.google.com/search?q=https://github.com/chirantan1234shee-ops/cyber_cafe)
+
+---
+
+## ⚠️ Hackathon demo scope
+
+YojnaMitra is a prototype. Scheme matching is based on the bundled demonstration rules; DigiLocker verification, document retrieval, and application submission are simulated and do not connect to government systems. Always confirm eligibility, requirements, and applications on the linked official portal.
+
+## 🔐 Configuration
+
+Do not commit credentials. To enable optional AI responses, add an OpenRouter key locally:
+
+```toml
+# .streamlit/secrets.toml
+OPENROUTER_API_KEY = "your-key"
+```
+
+Or set the `OPENROUTER_API_KEY` environment variable. Rotate any credential that was previously committed.
