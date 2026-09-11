@@ -1,5 +1,6 @@
 import sqlite3
 import hashlib
+import hmac
 import os
 import json
 import datetime
@@ -209,7 +210,20 @@ LANGUAGES = {
 # 3. DATABASE SETUP & HELPERS
 # ---------------------------------------------------------
 def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Return a salted password hash suitable for new accounts."""
+    salt = secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 310000).hex()
+    return f"pbkdf2_sha256${salt}${digest}"
+
+
+def verify_password(password, stored_hash):
+    """Verify new hashes while allowing existing demo accounts to sign in."""
+    if stored_hash.startswith("pbkdf2_sha256$"):
+        _, salt, expected = stored_hash.split("$", 2)
+        actual = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 310000).hex()
+        return hmac.compare_digest(actual, expected)
+    # Backwards-compatible support for legacy demo accounts; re-register to upgrade.
+    return hmac.compare_digest(hashlib.sha256(password.encode()).hexdigest(), stored_hash)
 
 def init_db():
     conn = sqlite3.connect('yojna_mitra.db')
@@ -331,8 +345,8 @@ GATEWAY_TOOLS = [
         "function": {
             "name": "submit_application",
             "description": (
-                "Submits the mapped, validated application to the scheme's DBT portal and returns "
-                "a real reference ID. Only call this AFTER validate_documents reports valid=true "
+                "Records a demo application locally and returns a demo reference ID. It does not "
+                "submit to any government portal. Only call this AFTER validate_documents reports valid=true "
                 "and map_form_fields has been called for this scheme."
             ),
             "parameters": {
@@ -423,7 +437,7 @@ def persist_submission(username, scheme_id, scheme_name, reference_id, status="S
 def tool_submit_application_impl(username, scheme_id, scheme_name):
     ref_id = generate_reference_id(scheme_id)
     persist_submission(username, scheme_id, scheme_name, ref_id)
-    return {"status": "submitted", "reference_id": ref_id}
+    return {"status": "demo_recorded", "reference_id": ref_id}
 
 
 def run_tool_agent(system_prompt, user_prompt, tools, tool_router, status_box, model=AGENT_MODEL, max_turns=6):
@@ -679,6 +693,7 @@ with st.sidebar:
 if not st.session_state["user"]:
     st.title(t["title"])
     st.caption(t["tagline"])
+    st.info("Hackathon demo: eligibility results, DigiLocker verification, document vault data, and application records are simulated. Confirm requirements and submit only through official portals.")
     
     l_tab1, l_tab2 = st.tabs([t["login_tab"], t["reg_tab"]])
     
@@ -691,10 +706,10 @@ if not st.session_state["user"]:
                     hashed = hash_password(pass_in.strip())
                     conn = sqlite3.connect('yojna_mitra.db')
                     cursor = conn.cursor()
-                    cursor.execute("SELECT username, name, age, gender, annual_income, category, employment_status, state, disability_status, marital_status, area_type, education_level, minority_status, land_holding FROM users WHERE LOWER(username) = LOWER(?) AND password = ?", (user_in.strip(), hashed))
+                    cursor.execute("SELECT username, name, age, gender, annual_income, category, employment_status, state, disability_status, marital_status, area_type, education_level, minority_status, land_holding, password FROM users WHERE LOWER(username) = LOWER(?)", (user_in.strip(),))
                     rec = cursor.fetchone()
                     conn.close()
-                    if rec:
+                    if rec and verify_password(pass_in.strip(), rec[14]):
                         st.session_state["user"] = {
                             "username": rec[0], "name": rec[1], "age": rec[2], "gender": rec[3],
                             "income": rec[4], "category": rec[5], "employment": rec[6], "state": rec[7],
@@ -1129,7 +1144,7 @@ else:
                             if uploaded_file:
                                 result = tool_submit_application_impl(u["username"], target_scheme["id"], target_scheme["name"])
                                 st.balloons()
-                                st.success(f"🎉 Application Submitted Successfully! Reference ID: {result['reference_id']}")
+                                st.success(f"🎉 Demo application recorded locally. Reference ID: {result['reference_id']}. Submit separately through the official portal.")
                             else:
                                 st.error("Please select a file to upload before submitting.")
                     else:
