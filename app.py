@@ -346,7 +346,7 @@ GATEWAY_TOOLS = [
             "name": "submit_application",
             "description": (
                 "Records a demo application locally and returns a demo reference ID. It does not "
-                "submit to any government portal. Only call this AFTER validate_documents reports valid=true 
+                "submit to any government portal. Only call this AFTER validate_documents reports valid=true "
                 "and map_form_fields has been called for this scheme."
             ),
             "parameters": {
